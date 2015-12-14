@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<f:view>
+	<f:metadata>
+		<!-- Start a new process instance. The Process Definition Key is read internally from
+         request parameters and cached in the CDI conversation scope.
+    -->
+		<f:event type="preRenderView"
+			listener="#{camundaTaskForm.startTaskForm()}" />
+	</f:metadata>
+	<h:head>
+		<title>Add Element</title>
+	</h:head>
+	<h:body>
+		<h1>Add Element</h1>
+		<h:form id="submitForm">
+			<h:panelGrid columns="1">
+
+
+				<label for="taskName">TaskName</label>
+				<!-- create process variables using the processVariables map. -->
+				<h:inputText id="taskName" value="#{processVariables['task']}"
+					required="true" />
+
+
+				<label for="description">Description</label>
+				<!-- create process variables using the processVariables map. -->
+				<h:inputText id="description"
+					value="#{processVariables['description']}" required="true" />
+
+				<h:commandButton id="crate_button" value="Create Task"
+				action="#{camundaTaskForm.completeTask()}" />
+				</h:panelGrid>
+
+			<!-- The button starts a new process instance. This ends the conversation and redirects us to the tasklist.
+
+           NOTE: Syntax is different when working on user task forms, see file "approveLoanRequest.xhtml".
+      -->
+
+			<h2>ToDo List</h2>
+			<h:dataTable var="process"
+				value="#{persistProcessPM.processList}">
+				<h:column>
+					<f:facet name="header">Task</f:facet>
+					#{process.task}
+    			</h:column>
+    			<h:column>
+					<f:facet name="header">Description</f:facet>
+					#{process.description}
+    			</h:column>
+    			<h:column>
+    			<h:commandButton id="done_button" value="Done"
+				action="#{persistProcessPM.completeProcess(process.id)}"/>
+				</h:column>
+    			<h:column>
+				<h:commandButton id="delete_button" value="Delete"
+				action="#{persistProcessPM.deleteProcess(process.id)}" />
+    			</h:column>
+			</h:dataTable>
+			
+			
+			
+			<h2>Completed List</h2>
+			<h:dataTable var="process"
+				value="#{persistProcessPM.completedList}">
+				<h:column>
+					<f:facet name="header">Task</f:facet>
+					#{process.task}
+    			</h:column>
+    			
+    			<h:column>
+					<f:facet name="header">Description</f:facet>
+					#{process.description}
+    			</h:column>
+    			
+    			<h:column>
+				</h:column>
+				
+    			<h:column>
+				<h:commandButton id="delete_button2" value="Delete"
+				action="#{persistProcessPM.deleteProcess(process.id)}" />
+    			</h:column>
+    			
+			</h:dataTable>
+			
+			<h:messages style="color:red;margin:8px;" />
+		</h:form>
+	</h:body>
+</f:view>
+</html>
